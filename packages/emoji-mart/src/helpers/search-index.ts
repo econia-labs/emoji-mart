@@ -48,9 +48,6 @@ async function search(value, { maxResults, caller } = {}) {
     for (const emoji of pool) {
       if (!alreadyChecked.has(emoji.id)) {
         alreadyChecked.add(emoji.id);
-        if (!emoji.search) {
-          console.debug(`Emoji ${emoji.id} doesn't have a \`search\` field.`);
-        }
       }
       if (!emoji.search) continue;
       const score = emoji.search.indexOf(`,${value}`);
