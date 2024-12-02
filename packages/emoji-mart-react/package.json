@@ -15,7 +15,7 @@
   "module": "dist/module.js",
   "scripts": {
     "build": "parcel build --no-autoinstall",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
     "emoji-mart": "^5.2",

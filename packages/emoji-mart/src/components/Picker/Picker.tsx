@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Component, createRef } from 'preact'
 
-import { deepEqual, sleep, getEmojiData } from '../../utils'
+import { deepEqual, sleep, getEmojiData, sumBytes } from '../../utils'
 import { Data, I18n, init } from '../../config'
 import { SearchIndex, Store, FrequentlyUsed } from '../../helpers'
 import Icons from '../../icons'
@@ -687,10 +687,43 @@ export default class Picker extends Component {
     )
   }
 
+  shouldDisableInput(emoji) {
+    try {
+      if (typeof this.props?.shouldDisableInput !== "function") {
+        return false;
+      }
+      // Get the current emoji selected with the selected skin factored into account.
+      const skin = this.state.tempSkin || this.state.skin;
+      if (!emoji || !skin) {
+        return true;
+      }
+      const emojiSkin = emoji.skins[skin - 1] || emoji.skins[0];
+      const selectedNativeSkin = emojiSkin.native;
+      if (!selectedNativeSkin) {
+        return true;
+      }
+      // Now check if the emoji is invalid based on `shouldDisableInput`.
+      return this.props.shouldDisableInput(selectedNativeSkin);
+    } catch (e) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(e);
+      }
+      // By default, don't disable, in case of an unexpected input. The picker has generally been working, so
+      // it should be fine for us to default to false.
+      return false;
+    }
+  }
+
   renderPreview() {
-    const emoji = this.getEmojiByPos(this.state.pos)
+    const emoji = this.getEmojiByPos(this.state.pos);
     const noSearchResults =
-      this.state.searchResults && !this.state.searchResults.length
+      this.state.searchResults && !this.state.searchResults.length;
+    const skin = this.state.tempSkin || this.state.skin
+    const emojiSkin = (emoji && skin) ? (emoji.skins[skin - 1] || emoji.skins[0]) : undefined;
+    const numBytes = sumBytes(emojiSkin?.native);
+    const formattedBytes = `${numBytes.toString().padStart(2, " ")} bytes`;
+    const shouldDisable = this.shouldDisableInput(emoji);
+    const invalidSymbolClass = shouldDisable ? "emojicoin-invalid-symbol" : "";
 
     return (
       <div
@@ -701,7 +734,8 @@ export default class Picker extends Component {
       >
         <div class="flex flex-middle flex-grow">
           <div
-            class="flex flex-auto flex-middle flex-center"
+            id="emoji-preview-wrapper"
+            class={`flex flex-auto flex-middle flex-center ${invalidSymbolClass}`}
             style={{
               height: this.props.emojiButtonSize,
               fontSize: this.props.emojiButtonSize,
@@ -728,11 +762,11 @@ export default class Picker extends Component {
           <div class={`margin-${this.dir[0]}`}>
             {emoji || noSearchResults ? (
               <div class={`padding-${this.dir[2]} align-${this.dir[0]}`}>
-                <div class="preview-title ellipsis">
+                <div class={`preview-title ellipsis ${invalidSymbolClass}`}>
                   {emoji ? emoji.name : I18n.search_no_results_1}
                 </div>
-                <div class="preview-subtitle ellipsis color-c">
-                  {emoji ? emoji.skins[0].shortcodes : I18n.search_no_results_2}
+                <div class={`preview-subtitle ellipsis color-c ${invalidSymbolClass}`}>
+                  {emoji ? formattedBytes : I18n.search_no_results_2}
                 </div>
               </div>
             ) : (
@@ -755,9 +789,11 @@ export default class Picker extends Component {
     const native = emojiSkin.native
     const selected = deepEqual(this.state.pos, pos)
     const key = pos.concat(emoji.id).join('')
+    const shouldDisable = this.shouldDisableInput(emoji)
+    const invalidSymbolClass = shouldDisable ? "emojicoin-invalid-symbol" : "";
 
     return (
-      <PureInlineComponent key={key} {...{ selected, skin, size }}>
+      <PureInlineComponent key={key} {...{ selected, skin, size, shouldDisable }}>
         <button
           aria-label={native}
           aria-selected={selected || undefined}
@@ -765,8 +801,10 @@ export default class Picker extends Component {
           aria-setsize={grid.setsize}
           data-keyboard={this.state.keyboard}
           title={this.props.previewPosition == 'none' ? emoji.name : undefined}
+          disabled={shouldDisable}
           type="button"
-          class="flex flex-center flex-middle"
+          id="emoji-picker-grid-item"
+          class={`flex flex-center flex-middle ${invalidSymbolClass}`}
           tabindex="-1"
           onClick={(e) => this.handleEmojiClick({ e, emoji })}
           onMouseEnter={() => this.handleEmojiOver(pos)}

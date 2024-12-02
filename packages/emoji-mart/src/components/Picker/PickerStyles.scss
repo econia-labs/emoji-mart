@@ -54,18 +54,18 @@
   --duration-fast: 125ms;
   --duration-instant: 50ms;
   --easing: cubic-bezier(.4, .0, .2, 1);
-
-  @media (prefers-reduced-motion) {
-    --duration: 0;
-    --duration-fast: 0;
-    --duration-instant: 0;
-  }
-
+  
   position: relative;
   width: 100%;
   text-align: left;
   border-radius: var(--border-radius);
   background-color: rgb(var(--em-rgb-background));
+  
+  @media (prefers-reduced-motion) {
+    --duration: 0;
+    --duration-fast: 0;
+    --duration-instant: 0;
+  }
 
   &[data-menu] {
     button { cursor: auto }
