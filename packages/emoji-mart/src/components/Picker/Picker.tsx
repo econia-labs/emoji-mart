@@ -688,33 +688,6 @@ export default class Picker extends Component {
     )
   }
 
-  shouldDisableInput(emoji) {
-    try {
-      if (typeof this.props?.shouldDisableInput !== "function") {
-        return false;
-      }
-      // Get the current emoji selected with the selected skin factored into account.
-      const skin = this.state.tempSkin || this.state.skin;
-      if (!emoji || !skin) {
-        return true;
-      }
-      const emojiSkin = emoji.skins[skin - 1] || emoji.skins[0];
-      const selectedNativeSkin = emojiSkin.native;
-      if (!selectedNativeSkin) {
-        return true;
-      }
-      // Now check if the emoji is invalid based on `shouldDisableInput`.
-      return this.props.shouldDisableInput(selectedNativeSkin);
-    } catch (e) {
-      if (process.env.NODE_ENV === "development") {
-        console.warn(e);
-      }
-      // By default, don't disable, in case of an unexpected input. The picker has generally been working, so
-      // it should be fine for us to default to false.
-      return false;
-    }
-  }
-
   renderPreview() {
     const noSearchResults = this.state.searchResults && !this.state.searchResults.length;
     const { formattedBytes, invalidSymbolClass } = getBytesAndClassName(this);
