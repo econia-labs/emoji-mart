@@ -689,8 +689,10 @@ export default class Picker extends Component {
   }
 
   renderPreview() {
-    const noSearchResults = this.state.searchResults && !this.state.searchResults.length;
-    const { formattedBytes, invalidSymbolClass } = getBytesAndClassName(this);
+    const emoji = this.getEmojiByPos(this.state.pos)
+    const noSearchResults =
+      this.state.searchResults && !this.state.searchResults.length
+    const { formattedBytes, invalidSymbolClass } = getBytesAndClassName(this)
 
     return (
       <div
@@ -702,7 +704,7 @@ export default class Picker extends Component {
         <div class="flex flex-middle flex-grow">
           <div
             id="emoji-preview-wrapper"
-            class={`flex flex-auto flex-middle flex-center ${invalidSymbolClass}`}
+            class={"flex flex-auto flex-middle flex-center " + invalidSymbolClass}
             style={{
               height: this.props.emojiButtonSize,
               fontSize: this.props.emojiButtonSize,
@@ -770,7 +772,7 @@ export default class Picker extends Component {
           disabled={shouldDisable}
           type="button"
           id="emoji-picker-grid-item"
-          class={`flex flex-center flex-middle ${invalidSymbolClass}`}
+          class={"flex flex-center flex-middle " + invalidSymbolClass}
           tabindex="-1"
           onClick={(e) => this.handleEmojiClick({ e, emoji })}
           onMouseEnter={() => this.handleEmojiOver(pos)}
