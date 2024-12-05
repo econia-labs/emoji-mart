@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm workspace @emoji-mart/website dev",
-    "build": "pnpm workspace emoji-mart build",
-    "build:data": "pnpm workspace @emoji-mart/data build",
-    "build:react": "pnpm workspace @emoji-mart/react build",
-    "build:website": "pnpm workspace @emoji-mart/website build",
+    "dev": "yarn workspace @emoji-mart/website dev",
+    "build": "yarn workspace emoji-mart build",
+    "build:data": "yarn workspace @emoji-mart/data build",
+    "build:react": "yarn workspace @emoji-mart/react build",
+    "build:website": "yarn workspace @emoji-mart/website build",
     "check:types": "tsc",
-    "pack:all": "pnpm pack:data && pnpm pack:react && pnpm pack:base",
-    "pack:base": "cd packages/emoji-mart && pnpm build && pnpm pack",
-    "pack:data": "cd packages/emoji-mart-data && pnpm build && pnpm pack",
-    "pack:react": "cd packages/emoji-mart-react && pnpm build && pnpm pack",
+    "pack:all": "yarn pack:data && yarn pack:react && yarn pack:base",
+    "pack:base": "cd packages/emoji-mart && yarn build && yarn pack",
+    "pack:data": "cd packages/emoji-mart-data && yarn build && yarn pack",
+    "pack:react": "cd packages/emoji-mart-react && yarn build && yarn pack",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "test": "jest"
@@ -37,5 +37,8 @@
     "trailingComma": "all",
     "arrowParens": "always"
   },
-  "packageManager": "pnpm@9.11.0+sha512.0a203ffaed5a3f63242cd064c8fb5892366c103e328079318f78062f24ea8c9d50bc6a47aa3567cabefd824d170e78fa2745ed1f16b132e16436146b7688f19b"
+  "engines": {
+    "yarn": ">=1"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

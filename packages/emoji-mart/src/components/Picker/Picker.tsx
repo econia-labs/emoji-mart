@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Component, createRef } from 'preact'
 
-import { deepEqual, sleep, getEmojiData, sumBytes } from '../../utils'
+import { deepEqual, sleep, getEmojiData } from '../../utils'
 import { Data, I18n, init } from '../../config'
 import { SearchIndex, Store, FrequentlyUsed } from '../../helpers'
 import Icons from '../../icons'
@@ -9,6 +9,7 @@ import Icons from '../../icons'
 import { Emoji } from '../Emoji'
 import { Navigation } from '../Navigation'
 import { PureInlineComponent } from '../HOCs'
+import { checkShouldDisableInput } from './external-utils'
 
 const Performance = {
   rowsPerRender: 10,
@@ -715,15 +716,8 @@ export default class Picker extends Component {
   }
 
   renderPreview() {
-    const emoji = this.getEmojiByPos(this.state.pos);
-    const noSearchResults =
-      this.state.searchResults && !this.state.searchResults.length;
-    const skin = this.state.tempSkin || this.state.skin
-    const emojiSkin = (emoji && skin) ? (emoji.skins[skin - 1] || emoji.skins[0]) : undefined;
-    const numBytes = sumBytes(emojiSkin?.native);
-    const formattedBytes = `${numBytes.toString().padStart(2, " ")} bytes`;
-    const shouldDisable = this.shouldDisableInput(emoji);
-    const invalidSymbolClass = shouldDisable ? "emojicoin-invalid-symbol" : "";
+    const noSearchResults = this.state.searchResults && !this.state.searchResults.length;
+    const { formattedBytes, invalidSymbolClass } = getBytesAndClassName(this);
 
     return (
       <div
@@ -762,10 +756,10 @@ export default class Picker extends Component {
           <div class={`margin-${this.dir[0]}`}>
             {emoji || noSearchResults ? (
               <div class={`padding-${this.dir[2]} align-${this.dir[0]}`}>
-                <div class={`preview-title ellipsis ${invalidSymbolClass}`}>
+                <div class={"preview-title ellipsis " + invalidSymbolClass}>
                   {emoji ? emoji.name : I18n.search_no_results_1}
                 </div>
-                <div class={`preview-subtitle ellipsis color-c ${invalidSymbolClass}`}>
+                <div class={"preview-subtitle ellipsis color-c " + invalidSymbolClass}>
                   {emoji ? formattedBytes : I18n.search_no_results_2}
                 </div>
               </div>
@@ -789,8 +783,7 @@ export default class Picker extends Component {
     const native = emojiSkin.native
     const selected = deepEqual(this.state.pos, pos)
     const key = pos.concat(emoji.id).join('')
-    const shouldDisable = this.shouldDisableInput(emoji)
-    const invalidSymbolClass = shouldDisable ? "emojicoin-invalid-symbol" : "";
+    const { shouldDisable, invalidSymbolClass } = getBytesAndClassName(this);
 
     return (
       <PureInlineComponent key={key} {...{ selected, skin, size, shouldDisable }}>

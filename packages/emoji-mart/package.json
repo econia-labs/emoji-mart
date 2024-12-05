@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "build": "parcel build --no-autoinstall",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "preact": "10.6.4"
