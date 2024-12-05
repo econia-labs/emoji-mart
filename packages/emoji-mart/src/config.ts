@@ -1,7 +1,12 @@
 // @ts-nocheck
-import i18n_en from "@emoji-mart/data/i18n/en.json"
-import PickerProps from "./components/Picker/PickerProps"
-import { FrequentlyUsed, NativeSupport, SafeFlags, SearchIndex } from "./helpers"
+import i18n_en from '@emoji-mart/data/i18n/en.json'
+import PickerProps from './components/Picker/PickerProps'
+import {
+  FrequentlyUsed,
+  NativeSupport,
+  SafeFlags,
+  SearchIndex,
+} from './helpers'
 
 export let I18n = null
 export let Data = null
@@ -34,7 +39,7 @@ export function init(options, { caller } = {}) {
     _init(options)
   } else if (caller && !initialized) {
     console.warn(
-      `\`${caller}\` requires data to be initialized first. Promise will be pending until \`init\` is called.`
+      `\`${caller}\` requires data to be initialized first. Promise will be pending until \`init\` is called.`,
     )
   }
 
@@ -51,9 +56,9 @@ async function _init(props) {
 
   if (!Data) {
     Data =
-      (typeof props.data === "function" ? await props.data() : props.data) ||
+      (typeof props.data === 'function' ? await props.data() : props.data) ||
       (await fetchJSON(
-        `https://cdn.jsdelivr.net/npm/@emoji-mart/data@latest/sets/${emojiVersion}/${set}.json`
+        `https://cdn.jsdelivr.net/npm/@emoji-mart/data@latest/sets/${emojiVersion}/${set}.json`,
       ))
 
     Data.emoticons = {}
@@ -84,11 +89,11 @@ async function _init(props) {
   }
 
   I18n =
-    (typeof props.i18n === "function" ? await props.i18n() : props.i18n) ||
-    (locale == "en"
+    (typeof props.i18n === 'function' ? await props.i18n() : props.i18n) ||
+    (locale == 'en'
       ? i18n_en
       : await fetchJSON(
-          `https://cdn.jsdelivr.net/npm/@emoji-mart/data@latest/i18n/${locale}.json`
+          `https://cdn.jsdelivr.net/npm/@emoji-mart/data@latest/i18n/${locale}.json`,
         ))
 
   if (props.custom) {
@@ -129,11 +134,9 @@ async function _init(props) {
 
   let latestVersionSupport = null
   let noCountryFlags = null
-  if (set == "native") {
-    // Always support the latest version.
-    latestVersionSupport = Infinity // NativeSupport.latestVersion()
-    // Don't disable country flags because we're using a custom font in our app.
-    noCountryFlags = props.noCountryFlags // || NativeSupport.noCountryFlags()
+  if (set == 'native') {
+    latestVersionSupport = Infinity // Always support the latest version.
+    noCountryFlags = props.noCountryFlags // Only disable country flags upon request.
   }
 
   let categoryIndex = Data.categories.length
@@ -141,10 +144,13 @@ async function _init(props) {
   while (categoryIndex--) {
     const category = Data.categories[categoryIndex]
 
-    if (category.id == "frequent") {
+    if (category.id == 'frequent') {
       let { maxFrequentRows, perLine } = props
 
-      maxFrequentRows = maxFrequentRows >= 0 ? maxFrequentRows : PickerProps.maxFrequentRows.value
+      maxFrequentRows =
+        maxFrequentRows >= 0
+          ? maxFrequentRows
+          : PickerProps.maxFrequentRows.value
       perLine || (perLine = PickerProps.perLine.value)
 
       category.emojis = FrequentlyUsed.get({ maxFrequentRows, perLine })
@@ -186,17 +192,16 @@ async function _init(props) {
         continue
       }
 
-      if (noCountryFlags && category.id == "flags") {
+      if (noCountryFlags && category.id == 'flags') {
         if (!SafeFlags.includes(emoji.id)) {
           ignore()
           continue
         }
       }
-
       if (!emoji.search) {
         resetSearchIndex = true
         emoji.search =
-          "," +
+          ',' +
           [
             [emoji.id, false],
             [emoji.name, true],
@@ -207,13 +212,15 @@ async function _init(props) {
               if (!strings) return
               return (Array.isArray(strings) ? strings : [strings])
                 .map((string) => {
-                  return (split ? string.split(/[-|_|\s]+/) : [string]).map((s) => s.toLowerCase())
+                  return (split ? string.split(/[-|_|\s]+/) : [string]).map(
+                    (s) => s.toLowerCase(),
+                  )
                 })
                 .flat()
             })
             .flat()
             .filter((a) => a && a.trim())
-            .join(",")
+            .join(',')
 
         if (emoji.emoticons) {
           for (const emoticon of emoji.emoticons) {
@@ -233,8 +240,8 @@ async function _init(props) {
             emoji.search += `,${native}`
           }
 
-          const skinShortcodes = skinIndex == 1 ? "" : `:skin-tone-${skinIndex}:`
-          skin.shortcodes = `:${emoji.id}:${skinShortcodes}`
+          const skinShortcodes =
+            skinIndex == 1 ? '' : `:skin-tone-${skinIndex}:`
         }
       }
     }
@@ -262,15 +269,21 @@ export function getProp(propName, props, defaultProps, element) {
   const defaults = defaultProps[propName]
   let value =
     (element && element.getAttribute(propName)) ||
-    (props[propName] != null && props[propName] != undefined ? props[propName] : null)
+    (props[propName] != null && props[propName] != undefined
+      ? props[propName]
+      : null)
 
   if (!defaults) {
     return value
   }
 
-  if (value != null && defaults.value && typeof defaults.value != typeof value) {
-    if (typeof defaults.value == "boolean") {
-      value = value == "false" ? false : true
+  if (
+    value != null &&
+    defaults.value &&
+    typeof defaults.value != typeof value
+  ) {
+    if (typeof defaults.value == 'boolean') {
+      value = value == 'false' ? false : true
     } else {
       value = defaults.value.constructor(value)
     }
@@ -280,7 +293,10 @@ export function getProp(propName, props, defaultProps, element) {
     value = defaults.transform(value)
   }
 
-  if (value == null || (defaults.choices && defaults.choices.indexOf(value) == -1)) {
+  if (
+    value == null ||
+    (defaults.choices && defaults.choices.indexOf(value) == -1)
+  ) {
     value = defaults.value
   }
 

@@ -10,7 +10,9 @@ function get(emojiId) {
   }
 
   return (
-    Data.emojis[emojiId] || Data.emojis[Data.aliases[emojiId]] || Data.emojis[Data.natives[emojiId]]
+    Data.emojis[emojiId] ||
+    Data.emojis[Data.aliases[emojiId]] ||
+    Data.emojis[Data.natives[emojiId]]
   )
 }
 
@@ -22,11 +24,11 @@ async function search(value, { maxResults, caller } = {}) {
   if (!value || !value.trim().length) return null
   maxResults || (maxResults = 90)
 
-  await init(null, { caller: caller || "SearchIndex.search" })
+  await init(null, { caller: caller || 'SearchIndex.search' })
 
   const values = value
     .toLowerCase()
-    .replace(/(\w)-/, "$1 ")
+    .replace(/(\w)-/, '$1 ')
     .split(/[\s|,]+/)
     .filter((word, i, words) => {
       return word.trim() && words.indexOf(word) == i
