@@ -65,7 +65,7 @@ async function _init(props) {
     Data.natives = {}
 
     Data.categories.unshift({
-      id: "frequent",
+      id: 'frequent',
       emojis: [],
     })
 
@@ -198,6 +198,7 @@ async function _init(props) {
           continue
         }
       }
+
       if (!emoji.search) {
         resetSearchIndex = true
         emoji.search =
@@ -242,6 +243,7 @@ async function _init(props) {
 
           const skinShortcodes =
             skinIndex == 1 ? '' : `:skin-tone-${skinIndex}:`
+          skin.shortcodes = `:${emoji.id}:${skinShortcodes}`
         }
       }
     }

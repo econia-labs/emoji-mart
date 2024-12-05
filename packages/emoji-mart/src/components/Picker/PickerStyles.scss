@@ -54,7 +54,7 @@
   --duration-fast: 125ms;
   --duration-instant: 50ms;
   --easing: cubic-bezier(.4, .0, .2, 1);
-  
+
   @media (prefers-reduced-motion) {
     --duration: 0;
     --duration-fast: 0;
