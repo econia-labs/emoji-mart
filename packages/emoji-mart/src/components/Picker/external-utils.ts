@@ -1,23 +1,19 @@
 import { Emoji } from "@emoji-mart/data";
 
-export function shouldDisableInput(context: any) {
+
+// Check if we should disable the input based on the function passed into the component props,
+// and the component is referred to as `picker` here.
+export function checkShouldDisableInput(picker: any, highlightedEmoji: Emoji | null) {
   try {
-    const emoji = context.getEmojiByPos(context.state.pos);
-    if (typeof context.props?.shouldDisableInput !== "function") {
+    if (!highlightedEmoji || typeof picker.props?.shouldDisableInput !== "function") {
       return false;
     }
     // Get the current emoji selected with the selected skin factored into account.
-    const skin = context.state.tempSkin || context.state.skin;
-    if (!emoji || !skin) {
-      return true;
-    }
-    const emojiSkin = emoji.skins[skin - 1] || emoji.skins[0];
+    const skin = picker.state.tempSkin || picker.state.skin;
+    const emojiSkin = highlightedEmoji.skins[skin - 1] || highlightedEmoji.skins[0];
     const selectedNativeSkin = emojiSkin.native;
-    if (!selectedNativeSkin) {
-      return true;
-    }
     // Now check if the emoji is invalid based on `shouldDisableInput`.
-    return context.props.shouldDisableInput(selectedNativeSkin);
+    return picker.props.shouldDisableInput(selectedNativeSkin);
   } catch (e) {
     console.warn(e);
     // By default, don't disable, in case of an unexpected input. The picker has generally been working, so
@@ -26,19 +22,15 @@ export function shouldDisableInput(context: any) {
   }
 }
 
-export function getBytesAndClassName(context: any) {
-    const emoji: Emoji | null = context.getEmojiByPos(context.state.pos)
-    const skin = context.state.tempSkin || context.state.skin
+export const INVALID_SYMBOL_CLASS = "emojicoin-invalid-symbol";
+
+export function getFormattedBytes(picker: any) {
+    const emoji: Emoji | null = picker.getEmojiByPos(picker.state.pos)
+    const skin = picker.state.tempSkin || picker.state.skin
     const emojiSkin = (emoji && skin) ? (emoji.skins[skin - 1] || emoji.skins[0]) : undefined;
     const numBytes = sumBytes(emojiSkin?.native);
     const formattedBytes = `${numBytes.toString().padStart(2, " ")} bytes`;
-    const shouldDisable = shouldDisableInput(emoji);
-    const invalidSymbolClass = shouldDisable ? "emojicoin-invalid-symbol" : "";
-    return {
-        shouldDisable,
-        formattedBytes,
-        invalidSymbolClass,
-    }
+    return formattedBytes;
 }
 
 const memoized = new Map<string, number>();

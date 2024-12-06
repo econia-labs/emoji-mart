@@ -9,7 +9,7 @@ import Icons from '../../icons'
 import { Emoji } from '../Emoji'
 import { Navigation } from '../Navigation'
 import { PureInlineComponent } from '../HOCs'
-import { getBytesAndClassName } from "./external-utils";
+import { checkShouldDisableInput, getFormattedBytes, INVALID_SYMBOL_CLASS } from "./external-utils";
 
 const Performance = {
   rowsPerRender: 10,
@@ -692,7 +692,8 @@ export default class Picker extends Component {
     const emoji = this.getEmojiByPos(this.state.pos)
     const noSearchResults =
       this.state.searchResults && !this.state.searchResults.length
-    const { formattedBytes, invalidSymbolClass } = getBytesAndClassName(this)
+    const formattedBytes = getFormattedBytes(this)
+    const shouldDisable = checkShouldDisableInput(this, emoji)
 
     return (
       <div
@@ -704,7 +705,7 @@ export default class Picker extends Component {
         <div class="flex flex-middle flex-grow">
           <div
             id="emoji-preview-wrapper"
-            class={"flex flex-auto flex-middle flex-center " + invalidSymbolClass}
+            class={"flex flex-auto flex-middle flex-center " + (shouldDisable ? INVALID_SYMBOL_CLASS : "")}
             style={{
               height: this.props.emojiButtonSize,
               fontSize: this.props.emojiButtonSize,
@@ -731,10 +732,10 @@ export default class Picker extends Component {
           <div class={`margin-${this.dir[0]}`}>
             {emoji || noSearchResults ? (
               <div class={`padding-${this.dir[2]} align-${this.dir[0]}`}>
-                <div class={"preview-title ellipsis " + invalidSymbolClass}>
+                <div class={"preview-title ellipsis " + (shouldDisable ? INVALID_SYMBOL_CLASS : "")}>
                   {emoji ? emoji.name : I18n.search_no_results_1}
                 </div>
-                <div class={"preview-subtitle ellipsis color-c " + invalidSymbolClass}>
+                <div class={"preview-subtitle ellipsis color-c " + (shouldDisable ? INVALID_SYMBOL_CLASS : "")}>
                   {emoji ? formattedBytes : I18n.search_no_results_2}
                 </div>
               </div>
@@ -758,7 +759,7 @@ export default class Picker extends Component {
     const native = emojiSkin.native
     const selected = deepEqual(this.state.pos, pos)
     const key = pos.concat(emoji.id).join('')
-    const { shouldDisable, invalidSymbolClass } = getBytesAndClassName(this);
+    const shouldDisable = checkShouldDisableInput(this, emoji)
 
     return (
       <PureInlineComponent key={key} {...{ selected, skin, size, shouldDisable }}>
@@ -772,7 +773,7 @@ export default class Picker extends Component {
           disabled={shouldDisable}
           type="button"
           id="emoji-picker-grid-item"
-          class={"flex flex-center flex-middle " + invalidSymbolClass}
+          class={"flex flex-center flex-middle " + (shouldDisable ? INVALID_SYMBOL_CLASS : "")}
           tabindex="-1"
           onClick={(e) => this.handleEmojiClick({ e, emoji })}
           onMouseEnter={() => this.handleEmojiOver(pos)}
