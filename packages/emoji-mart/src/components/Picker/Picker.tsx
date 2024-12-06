@@ -9,7 +9,7 @@ import Icons from '../../icons'
 import { Emoji } from '../Emoji'
 import { Navigation } from '../Navigation'
 import { PureInlineComponent } from '../HOCs'
-import { checkShouldDisableInput } from './external-utils'
+export { checkShouldDisableInput, getBytesAndClassName } from "./external-utils";
 
 const Performance = {
   rowsPerRender: 10,

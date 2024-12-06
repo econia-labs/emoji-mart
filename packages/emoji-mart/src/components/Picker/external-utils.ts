@@ -1,4 +1,4 @@
-import { Emoji, EmojiMartData } from "@emoji-mart/data";
+import { Emoji } from "@emoji-mart/data";
 
 export function shouldDisableInput(this: any) {
   try {
@@ -19,9 +19,7 @@ export function shouldDisableInput(this: any) {
     // Now check if the emoji is invalid based on `shouldDisableInput`.
     return this.props.shouldDisableInput(selectedNativeSkin);
   } catch (e) {
-    if (process.env.NODE_ENV === "development") {
-      console.warn(e);
-    }
+    console.warn(e);
     // By default, don't disable, in case of an unexpected input. The picker has generally been working, so
     // it should be fine for us to default to false.
     return false;
