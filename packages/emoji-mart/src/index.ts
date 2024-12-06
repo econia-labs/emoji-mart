@@ -6,3 +6,4 @@ export { FrequentlyUsed, SafeFlags, SearchIndex, Store, NativeSupport } from './
 export { init, Data, I18n } from './config'
 
 export { getEmojiDataFromNative } from './utils'
+export { getBytesAndClassName } from './components/Picker/external-utils'
