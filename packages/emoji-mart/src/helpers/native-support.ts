@@ -30,7 +30,7 @@ function noCountryFlags() {
   return true
 }
 
-function isSupported(emoji) {
+export function isSupported(emoji) {
   if (CACHE.has(emoji)) {
     return CACHE.get(emoji)
   }
@@ -111,4 +111,4 @@ const isEmojiSupported = (() => {
   }
 })()
 
-export default { latestVersion, noCountryFlags }
+export default { latestVersion, noCountryFlags, isSupported }

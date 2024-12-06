@@ -12,6 +12,10 @@
     "build:react": "yarn workspace @emoji-mart/react build",
     "build:website": "yarn workspace @emoji-mart/website build",
     "check:types": "tsc",
+    "pack:all": "yarn install && yarn pack:data && yarn pack:react && yarn pack:base",
+    "pack:base": "cd packages/emoji-mart && yarn build && yarn pack",
+    "pack:data": "cd packages/emoji-mart-data && yarn build && yarn pack",
+    "pack:react": "cd packages/emoji-mart-react && yarn build && yarn pack",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "test": "jest"
@@ -38,5 +42,6 @@
   },
   "engines": {
     "yarn": ">=1"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

@@ -135,8 +135,8 @@ async function _init(props) {
   let latestVersionSupport = null
   let noCountryFlags = null
   if (set == 'native') {
-    latestVersionSupport = NativeSupport.latestVersion()
-    noCountryFlags = props.noCountryFlags || NativeSupport.noCountryFlags()
+    latestVersionSupport = Infinity // Always support the latest version.
+    noCountryFlags = props.noCountryFlags // Only disable country flags upon request.
   }
 
   let categoryIndex = Data.categories.length

@@ -24,7 +24,12 @@ export default {
   exceptEmojis: {
     value: [],
   },
+  // Use this for determining which emojis should even show up in the picker.
+  // (e?: EmojiMartData["emojis"][string]) => boolean
   filterEmojis: undefined,
+  // Use this callback to check whether or not the current emoji should show up as disabled.
+  // (currentEmoji?: string) => boolean
+  shouldDisableInput: undefined,
   icons: {
     value: 'auto',
     choices: ['auto', 'outline', 'solid'],

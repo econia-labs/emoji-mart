@@ -48,10 +48,11 @@ export default function Emoji(props) {
         />
       ) : props.set == 'native' ? (
         <span
+          className="individual-emoji"
           style={{
             fontSize: props.size,
             fontFamily:
-              '"EmojiMart", "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji"',
+              '"Apple Color Emoji", "EmojiMart", "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji"',
           }}
         >
           {emojiSkin.native}
